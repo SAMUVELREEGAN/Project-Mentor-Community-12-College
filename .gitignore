@@ -1,0 +1,17 @@
+# Dependencies
+node_modules/
+
+# Builds
+frontend/build/
+backend/uploads/
+
+# Logs / env / OS
+*.log
+.DS_Store
+.env
+.env.*
+
+# Editor
+.idea/
+.vscode/
+*.swp
