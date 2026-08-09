@@ -29,6 +29,7 @@ import Questions from './pages/user/Questions';
 import QuestionDetail from './pages/user/QuestionDetail';
 import Bookmarks from './pages/user/Bookmarks';
 import Profile from './pages/user/Profile';
+import Chat from './pages/user/Chat';
 
 import AdminDashboard from './pages/admin/Dashboard';
 import AdminUsers from './pages/admin/Users';
@@ -93,6 +94,7 @@ export default function App() {
               <Route path="my-projects" element={<MyProjects />} />
               <Route path="questions" element={<Questions />} />
               <Route path="questions/:id" element={<QuestionDetail />} />
+              <Route path="chat" element={<Chat />} />
               <Route path="bookmarks" element={<Bookmarks />} />
               <Route path="profile" element={<Profile />} />
             </Route>

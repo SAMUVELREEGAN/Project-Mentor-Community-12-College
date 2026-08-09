@@ -20,6 +20,7 @@ const activitySchema = new mongoose.Schema(
         'bookmark_add',
         'bookmark_remove',
         'profile_update',
+        'chat_room_create',
         'admin_verify_project',
         'admin_moderate',
         'admin_user_action',

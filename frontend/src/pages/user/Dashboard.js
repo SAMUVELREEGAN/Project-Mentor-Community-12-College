@@ -78,6 +78,19 @@ export default function UserDashboard() {
 
           <section className="panel">
             <div className="panel-head">
+              <h3>Group chat</h3>
+              <Link to="/app/chat">Open chat</Link>
+            </div>
+            <p className="muted">
+              Projects are listed on the left. Open one to chat with the owner and other juniors on the right.
+            </p>
+            <Link to="/app/chat" className="btn btn-primary sm">
+              Enter Group Chat
+            </Link>
+          </section>
+
+          <section className="panel">
+            <div className="panel-head">
               <h3>Recently shared projects</h3>
               <Link to="/app/projects">View all</Link>
             </div>

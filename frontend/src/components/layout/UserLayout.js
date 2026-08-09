@@ -18,6 +18,7 @@ export default function UserLayout() {
     { to: '/app', label: 'Dashboard', end: true },
     { to: '/app/projects', label: 'Browse Projects' },
     { to: '/app/questions', label: 'Discussions' },
+    { to: '/app/chat', label: 'Group Chat' },
     { to: '/app/bookmarks', label: 'Bookmarks' },
     ...(canMentor
       ? [

@@ -12,6 +12,7 @@ const projectRoutes = require('./routes/projects');
 const commentRoutes = require('./routes/comments');
 const questionRoutes = require('./routes/questions');
 const bookmarkRoutes = require('./routes/bookmarks');
+const chatRoutes = require('./routes/chat');
 const adminRoutes = require('./routes/admin');
 
 const app = express();
@@ -36,6 +37,7 @@ app.use('/api/projects', projectRoutes);
 app.use('/api/comments', commentRoutes);
 app.use('/api/questions', questionRoutes);
 app.use('/api/bookmarks', bookmarkRoutes);
+app.use('/api/chat', chatRoutes);
 app.use('/api/admin', adminRoutes);
 
 app.use((err, _req, res, _next) => {
