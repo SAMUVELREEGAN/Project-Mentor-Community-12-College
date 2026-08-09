@@ -104,28 +104,39 @@ p {
   background: var(--brand-dark);
 }
 
+.btn-primary:hover,
+a.btn-primary:hover {
+  background: var(--brand-dark);
+  color: #fff;
+}
+
 .btn:disabled {
   opacity: 0.65;
   cursor: not-allowed;
   transform: none;
 }
 
-.btn-primary {
+.btn-primary,
+a.btn-primary {
   background: var(--brand);
   color: #fff;
 }
 
-.btn-outline {
+.btn-outline,
+a.btn-outline {
   background: transparent;
   border-color: var(--line);
   color: var(--ink);
 }
 
-.btn-outline:hover {
+.btn-outline:hover,
+a.btn-outline:hover {
   background: var(--brand-soft);
+  color: var(--ink);
 }
 
-.btn-light {
+.btn-light,
+a.btn-light {
   background: rgba(255, 255, 255, 0.92);
   color: var(--ink);
 }
@@ -135,10 +146,17 @@ p {
   color: var(--muted);
 }
 
-.btn-danger {
+.btn-danger,
+a.btn-danger {
   background: #fef3f2;
   color: var(--danger);
   border-color: #fecdca;
+}
+
+a.btn,
+a.btn:hover,
+a.btn:focus {
+  text-decoration: none;
 }
 
 .btn.sm {
@@ -329,12 +347,22 @@ label {
   gap: 0.85rem;
 }
 
-.public-nav-links a {
+.public-nav-links a:not(.btn) {
   color: var(--muted);
   font-weight: 600;
 }
 
-.public-nav-links a:hover {
+.public-nav-links a:not(.btn):hover {
+  color: var(--ink);
+}
+
+.public-nav-links a.btn-primary,
+.public-nav-links a.btn-primary:hover {
+  color: #fff;
+}
+
+.public-nav-links a.btn-outline,
+.public-nav-links a.btn-outline:hover {
   color: var(--ink);
 }
 
@@ -597,8 +625,10 @@ label {
   background: var(--accent);
 }
 
-.logout-btn {
-  color: rgba(255, 255, 255, 0.85);
+.logout-btn,
+.logout-btn:hover {
+  color: rgba(255, 255, 255, 0.92);
+  background: rgba(255, 255, 255, 0.08);
 }
 
 .main-area {

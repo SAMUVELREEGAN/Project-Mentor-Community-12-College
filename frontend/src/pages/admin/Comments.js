@@ -31,7 +31,7 @@ export default function AdminComments() {
     try {
       await adminApi.patch(`/admin/comments/${id}/visibility`, { isHidden: !isHidden });
       setMessage('Comment visibility updated');
-      load();
+      await load(true);
     } catch (err) {
       setError(err.message);
     }
@@ -42,7 +42,8 @@ export default function AdminComments() {
     try {
       await adminApi.delete(`/admin/comments/${id}`);
       setMessage('Comment deleted');
-      load();
+      setComments((prev) => prev.filter((c) => c._id !== id));
+      await load(true);
     } catch (err) {
       setError(err.message);
     }
@@ -63,7 +64,7 @@ export default function AdminComments() {
       <Alert type="error" message={error} onClose={() => setError('')} />
       <Alert type="success" message={message} onClose={() => setMessage('')} />
 
-      {loading ? (
+      {loading && comments.length === 0 ? (
         <LoadingInline />
       ) : comments.length === 0 ? (
         <EmptyState title="No comments yet" />

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { userApi } from '../../api/client';
 import { Alert, EmptyState, LoadingInline } from '../../components/common/UI';
@@ -9,8 +9,8 @@ export default function MyProjects() {
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
 
-  const load = async () => {
-    setLoading(true);
+  const load = useCallback(async (silent = false) => {
+    if (!silent) setLoading(true);
     setError('');
     try {
       const { data } = await userApi.get('/projects/mine');
@@ -18,13 +18,15 @@ export default function MyProjects() {
     } catch (err) {
       setError(err.message);
     } finally {
-      setLoading(false);
+      if (!silent) setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
-    load();
-  }, []);
+    load(false);
+    const timer = setInterval(() => load(true), 10000);
+    return () => clearInterval(timer);
+  }, [load]);
 
   const remove = async (id) => {
     if (!window.confirm('Delete this project?')) return;
@@ -52,7 +54,7 @@ export default function MyProjects() {
       <Alert type="error" message={error} onClose={() => setError('')} />
       <Alert type="success" message={message} onClose={() => setMessage('')} />
 
-      {loading ? (
+      {loading && projects.length === 0 ? (
         <LoadingInline />
       ) : projects.length === 0 ? (
         <EmptyState

@@ -1,4 +1,4 @@
-import React, { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
+import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { adminApi, publicApi } from '../api/client';
 import {
   ADMIN_TOKEN_KEY,
@@ -14,12 +14,8 @@ export function AdminAuthProvider({ children }) {
   const [admin, setAdmin] = useState(null);
   const [token, setToken] = useState(null);
   const [loading, setLoading] = useState(true);
-  const initialized = useRef(false);
 
   useEffect(() => {
-    if (initialized.current) return;
-    initialized.current = true;
-
     let cancelled = false;
 
     async function bootstrap() {

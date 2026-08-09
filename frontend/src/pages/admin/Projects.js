@@ -6,6 +6,7 @@ export default function AdminProjects() {
   const [projects, setProjects] = useState([]);
   const [status, setStatus] = useState('pending');
   const [loading, setLoading] = useState(true);
+  const [busyId, setBusyId] = useState(null);
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
   const [rejectId, setRejectId] = useState(null);
@@ -33,25 +34,46 @@ export default function AdminProjects() {
   }, [load]);
 
   const verify = async (id, nextStatus, rejectionReason = '') => {
+    setBusyId(id);
+    setError('');
     try {
-      await adminApi.patch(`/admin/projects/${id}/verify`, { status: nextStatus, rejectionReason });
+      const { data } = await adminApi.patch(`/admin/projects/${id}/verify`, {
+        status: nextStatus,
+        rejectionReason,
+      });
       setMessage(`Project ${nextStatus}`);
       setRejectId(null);
       setReason('');
-      load();
+
+      const updated = data.project;
+      setProjects((prev) => {
+        if (status !== 'all' && status !== nextStatus) {
+          return prev.filter((p) => p._id !== id);
+        }
+        return prev.map((p) => (p._id === id ? updated || { ...p, status: nextStatus } : p));
+      });
+
+      await load(true);
     } catch (err) {
       setError(err.message);
+    } finally {
+      setBusyId(null);
     }
   };
 
   const remove = async (id) => {
     if (!window.confirm('Delete this project permanently?')) return;
+    setBusyId(id);
+    setError('');
     try {
       await adminApi.delete(`/admin/projects/${id}`);
       setMessage('Project deleted');
-      load();
+      setProjects((prev) => prev.filter((p) => p._id !== id));
+      await load(true);
     } catch (err) {
       setError(err.message);
+    } finally {
+      setBusyId(null);
     }
   };
 
@@ -79,7 +101,7 @@ export default function AdminProjects() {
       <Alert type="error" message={error} onClose={() => setError('')} />
       <Alert type="success" message={message} onClose={() => setMessage('')} />
 
-      {loading ? (
+      {loading && projects.length === 0 ? (
         <LoadingInline />
       ) : projects.length === 0 ? (
         <EmptyState title="No projects in this filter" />
@@ -100,16 +122,31 @@ export default function AdminProjects() {
               </div>
               <div className="table-actions">
                 {p.status !== 'approved' && (
-                  <button type="button" className="btn btn-primary sm" onClick={() => verify(p._id, 'approved')}>
-                    Approve
+                  <button
+                    type="button"
+                    className="btn btn-primary sm"
+                    disabled={busyId === p._id}
+                    onClick={() => verify(p._id, 'approved')}
+                  >
+                    {busyId === p._id ? 'Saving...' : 'Approve'}
                   </button>
                 )}
                 {p.status !== 'rejected' && (
-                  <button type="button" className="btn btn-outline sm" onClick={() => setRejectId(p._id)}>
+                  <button
+                    type="button"
+                    className="btn btn-outline sm"
+                    disabled={busyId === p._id}
+                    onClick={() => setRejectId(p._id)}
+                  >
                     Reject
                   </button>
                 )}
-                <button type="button" className="btn btn-danger sm" onClick={() => remove(p._id)}>
+                <button
+                  type="button"
+                  className="btn btn-danger sm"
+                  disabled={busyId === p._id}
+                  onClick={() => remove(p._id)}
+                >
                   Delete
                 </button>
               </div>
@@ -122,7 +159,12 @@ export default function AdminProjects() {
                     value={reason}
                     onChange={(e) => setReason(e.target.value)}
                   />
-                  <button type="button" className="btn btn-danger sm" onClick={() => verify(p._id, 'rejected', reason)}>
+                  <button
+                    type="button"
+                    className="btn btn-danger sm"
+                    disabled={busyId === p._id}
+                    onClick={() => verify(p._id, 'rejected', reason)}
+                  >
                     Confirm reject
                   </button>
                 </div>

@@ -31,7 +31,7 @@ export default function AdminQuestions() {
     try {
       await adminApi.patch(`/admin/questions/${id}/visibility`, { isHidden: !isHidden });
       setMessage('Question visibility updated');
-      load();
+      await load(true);
     } catch (err) {
       setError(err.message);
     }
@@ -42,7 +42,8 @@ export default function AdminQuestions() {
     try {
       await adminApi.delete(`/admin/questions/${id}`);
       setMessage('Question deleted');
-      load();
+      setQuestions((prev) => prev.filter((q) => q._id !== id));
+      await load(true);
     } catch (err) {
       setError(err.message);
     }
@@ -63,7 +64,7 @@ export default function AdminQuestions() {
       <Alert type="error" message={error} onClose={() => setError('')} />
       <Alert type="success" message={message} onClose={() => setMessage('')} />
 
-      {loading ? (
+      {loading && questions.length === 0 ? (
         <LoadingInline />
       ) : questions.length === 0 ? (
         <EmptyState title="No discussions yet" />
